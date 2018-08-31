@@ -17,8 +17,7 @@
 * type: <%=schema.simpletype %><% if (schema.simpletype.match(/\[\]\[\]/)||schema.simpletype==="`array[]`") { %> (nested array)<% } %><% if (schema.type==='array') { %>
 <%   if (schema.maxItems!==undefined&&schema.minItems!==undefined) { %>* between `<%=schema.minItems %>` and `<%=schema.maxItems %>` items in the array<% } 
 else if (schema.maxItems!==undefined                             ) { %>* no more than `<%=schema.maxItems %>` items in the array<% }
-else if (schema.minItems!==undefined                             ) { %>* at least `<%=schema.minItems %>` items in the array<% } %>
-<% } %><% if (schema.default!==undefined) { %>
+else if (schema.minItems!==undefined                             ) { %>* at least `<%=schema.minItems %>` items in the array<% } %><% } %><% if (schema.default!==undefined) { %>
 * default: `<%- JSON.stringify(schema.default) %>`
 <% } %>
 * defined in <% if (schema.$oSchema) { %>[<%= schema.$oSchema.$linkVal %>](<%= schema.$oSchema.$linkPath %>#<%= nameSlug %>)<% } else { %>this schema<% } %>
@@ -35,7 +34,7 @@ The value of this property **must** be equal to:
 The value of this property **must** be equal to one of the [known values below](#<%=nameSlug %>-known-values).
 <% } else { %>
 
-### <%=fully_qualified_name %> Type
+### Type
 
 <% if (schema.type==="string") { %>
 <%- include("string-type",{schema:schema,_:_}) %>
@@ -62,7 +61,7 @@ Unknown type `<%= schema.type %>`.
 <% }} %>
 
 <% if (schema.enum!==undefined||schema["meta:enum"]!==undefined) { %>
-### <%=name %> Known Values
+### Known Values
 
 | Value | Description |
 |-------|-------------|
@@ -81,7 +80,7 @@ Unknown type `<%= schema.type %>`.
 <%- examples[0] %>
 ```
 <% } else if (examples && examples.length > 1) { %>
-### <%=name %> Examples
+### Examples
 <%  _.forEach(examples, example => { %>
 
 ```json

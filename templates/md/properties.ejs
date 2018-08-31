@@ -3,8 +3,24 @@
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
- */ %>
-# <%=title %> Properties
+ */
+
+function createTree(schema, depth, parent){
+  var lines = []
+  if (schema.type==="array") {
+    lines = lines.concat(createTree(schema.items, depth + 1, parent))
+  } else if (schema.type==="object") {
+    _.keys(schema.properties).sort().forEach(property => {
+      var fully_qualified_name = parent + property
+      lines.push("  ".repeat(depth) + "- [" + property + "](#" + fully_qualified_name.replace(/\./g,"") + ")")
+      lines = lines.concat(createTree(schema.properties[property], depth + 1, fully_qualified_name + "."))
+    })
+  }
+  return lines
+}
+%>
+
+# Properties
 
 <% const hasDefault = _.keys(props).filter(property => _.has(props, property + '.default')).length > 0; %>
 
@@ -31,3 +47,10 @@
 %><% if (additional!==false||additional===undefined) { %>
 | `*` | any | Additional | this schema *allows* additional properties |
 <% } %>
+
+# Property Tree
+
+<% const tree = createTree(schema, 0, "");
+  tree.forEach(line => { %>
+<%= line %>
+<%  }); %>
